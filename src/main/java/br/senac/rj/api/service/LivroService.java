@@ -1,7 +1,15 @@
 package br.senac.rj.api.service;
 
+import br.senac.rj.api.exceptions.ResourceNotFoundException;
 import br.senac.rj.api.model.Livro;
 import br.senac.rj.api.repository.LivroRepository;
+import br.senac.rj.api.validation.LivroValidation;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -18,23 +26,50 @@ public class LivroService {
     }
 
     public List<Livro> listarLivros() {
-        return this.livroRepository.findAll();
+        List<Livro> livros = this.livroRepository.findAll();
+        if (livros.isEmpty()) {
+            throw new ResourceNotFoundException("Nao ha livros cadastrados");
+        }
+        return livros;
     }
 
     public Livro incluirLivro(Livro livro) {
-        return this.livroRepository.save(livro);
+        if (LivroValidation.validarLivro(livro)) {
+            return this.livroRepository.save(livro);
+        } else {
+            throw new RuntimeException("Dados do livro invalidos");
+        }
     }
 
-    public Optional<Livro> buscarLivroPorCodigo(Long codigo) {
-        return this.livroRepository.findById(codigo);
+    public Livro buscarLivroPorCodigo(Long codigo) {
+        String mensagem = "Livro com o codigo [" + codigo + "] nao encontrado";
+        Optional<Livro> livro = this.livroRepository.findById(codigo);
+        if (livro.isEmpty()) {
+            throw new ResourceNotFoundException(mensagem);
+        }
+
+        Livro l = livro.get();
+        return l;
     }
 
     public void excluirLivro(Long codigo) {
-        this.livroRepository.deleteById(codigo);
+        try {
+            this.livroRepository.deleteById(codigo);
+        } catch (EmptyResultDataAccessException erdae) {
+            throw new ResourceNotFoundException("Livro com o codigo [" + codigo + "nao encontrado");
+        }
     }
 
     public Livro atualizarLivro(Long codigo, Livro livroAtualizado) {
-        return null;
+        Optional<Livro> livro = this.livroRepository.findById(codigo);
+        if (livro.isPresent()) {
+            Livro livroAjustado = livro.get();
+            livroAjustado.setTitulo(livroAtualizado.getTitulo());
+            livroAjustado.setPreco(livroAtualizado.getPreco());
+            return this.livroRepository.save(livroAjustado);
+        } else {
+            throw new ResourceNotFoundException("Livro com o codigo [" + codigo + "nao encontrado");
+        }
     }
 
 }
