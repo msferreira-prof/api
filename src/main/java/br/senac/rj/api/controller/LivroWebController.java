@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/livros")
@@ -27,13 +26,13 @@ public class LivroWebController {
         return "livros/index";
     }
 
-    @GetMapping("/incluir")
+    @GetMapping("/registrar")
     public String mostrarFormIncluirLivro(Model model) {
         model.addAttribute("livro", new Livro());
-        return "livros/incluir";
+        return "livros/registrar";
     }
 
-    @PostMapping("/incluir")
+    @PostMapping("/registrar")
     public String incluirLivro(@ModelAttribute Livro livro, RedirectAttributes redirectAttributes) {
         this.livroService.incluirLivro(livro);
         redirectAttributes.addFlashAttribute("msg", "Livro incluido com sucesso!");
