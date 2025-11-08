@@ -1,6 +1,9 @@
 package br.senac.rj.api.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.net.ssl.SSLEngineResult;
 
 @RestController
 @RequestMapping("/hello")
@@ -12,13 +15,13 @@ public class HelloWorldController {
     }
 
     @GetMapping("/voce/{nome}")
-    public String olaVoce(@PathVariable String nome) {
+    public ResponseEntity<?> olaVoce(@PathVariable String nome) {
         if (nome != null) {
             nome = nome + ".";
         } else {
             nome = "Não recebi nome";
         }
-        return "Hello, " + nome;
+        return ResponseEntity.ok("Hello, " + nome);
     }
 
 }

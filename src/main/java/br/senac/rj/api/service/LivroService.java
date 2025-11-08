@@ -4,16 +4,10 @@ import br.senac.rj.api.exceptions.ResourceNotFoundException;
 import br.senac.rj.api.model.Livro;
 import br.senac.rj.api.repository.LivroRepository;
 import br.senac.rj.api.validation.LivroValidation;
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
