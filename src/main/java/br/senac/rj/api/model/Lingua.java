@@ -1,5 +1,6 @@
 package br.senac.rj.api.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class Lingua {
             mappedBy = "lingua",
             cascade = CascadeType.ALL
     )
+    @JsonBackReference
     private List<Livro> livros;
 
     public Lingua() {

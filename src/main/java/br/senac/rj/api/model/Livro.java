@@ -1,6 +1,7 @@
 package br.senac.rj.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,9 +15,9 @@ public class Livro {
     private String titulo;
 
     private Double preco;
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="lingua_codigo")
-    @JsonIgnore
+    @JsonManagedReference
     private Lingua lingua;
 
     public Livro() {
