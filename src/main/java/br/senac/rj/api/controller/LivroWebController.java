@@ -19,17 +19,16 @@ public class LivroWebController {
         this.livroService = livroService;
     }
 
+    @GetMapping("/hello")
+    public String hello() {
+        return "livros/index";
+    }
+
     @GetMapping()
     public String mostrarLivros(Model model) {
         List<Livro> livros = this.livroService.listarLivros();
         model.addAttribute("livros", livros);
         return "livros/index";
-    }
-
-    @GetMapping("/registrar")
-    public String mostrarFormIncluirLivro(Model model) {
-        model.addAttribute("livro", new Livro());
-        return "livros/registrar";
     }
 
     @PostMapping("/registrar")
@@ -38,6 +37,14 @@ public class LivroWebController {
         redirectAttributes.addFlashAttribute("msg", "Livro incluido com sucesso!");
         return "redirect:/livros";
     }
+
+
+    @GetMapping("/registrar")
+    public String mostrarFormIncluirLivro(Model model) {
+        model.addAttribute("livro", new Livro());
+        return "livros/registrar";
+    }
+
 
     @GetMapping("/editar")
     public String mostrarFormEditarLivro(@RequestParam("codigo") Long codigo, Model model) {
