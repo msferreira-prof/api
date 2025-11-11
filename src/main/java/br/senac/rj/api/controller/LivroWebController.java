@@ -1,7 +1,9 @@
 package br.senac.rj.api.controller;
 
 import br.senac.rj.api.exceptions.ResourceNotFoundException;
+import br.senac.rj.api.model.Lingua;
 import br.senac.rj.api.model.Livro;
+import br.senac.rj.api.service.LinguaService;
 import br.senac.rj.api.service.LivroService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,9 +17,11 @@ import java.util.List;
 public class LivroWebController {
 
     private final LivroService livroService;
+    private final LinguaService linguaService;
 
-    private LivroWebController(LivroService livroService) {
+    private LivroWebController(LivroService livroService, LinguaService linguaService) {
         this.livroService=livroService;
+        this.linguaService=linguaService;
     }
 
     @GetMapping
@@ -30,6 +34,7 @@ public class LivroWebController {
     @GetMapping("/registrar")
     public String mostrarFormIncluirLivro(Model model) {
         model.addAttribute("livro", new Livro());
+        model.addAttribute("linguas", linguaService.listarLinguas());
         return "livros/registrar";
     }
 
@@ -45,6 +50,7 @@ public class LivroWebController {
         Livro livro = this.livroService.buscarLivroPorCodigo(codigo);
         if (livro != null) {
             model.addAttribute("livro", livro);
+            model.addAttribute("linguas", linguaService.listarLinguas());
             return "livros/editar";
         }
         return "redirect:/livros";

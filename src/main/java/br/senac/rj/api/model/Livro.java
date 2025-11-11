@@ -1,5 +1,6 @@
 package br.senac.rj.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,6 +14,10 @@ public class Livro {
     private String titulo;
 
     private Double preco;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="lingua_codigo")
+    @JsonIgnore
+    private Lingua lingua;
 
     public Livro() {
     }
@@ -24,6 +29,10 @@ public class Livro {
 
     public Long getCodigo() {
         return codigo;
+    }
+
+    public void setCodigo(Long codigo) {
+        this.codigo = codigo;
     }
 
     public String getTitulo() {
@@ -40,5 +49,13 @@ public class Livro {
 
     public void setPreco(Double preco) {
         this.preco = preco;
+    }
+
+    public Lingua getLingua() {
+        return lingua;
+    }
+
+    public void setLingua(Lingua lingua) {
+        this.lingua = lingua;
     }
 }

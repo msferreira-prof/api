@@ -1,7 +1,9 @@
 package br.senac.rj.api.service;
 
 import br.senac.rj.api.exceptions.ResourceNotFoundException;
+import br.senac.rj.api.model.Lingua;
 import br.senac.rj.api.model.Livro;
+import br.senac.rj.api.repository.LinguaRepository;
 import br.senac.rj.api.repository.LivroRepository;
 import br.senac.rj.api.validation.LivroValidation;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,20 +17,29 @@ import java.util.Optional;
 public class LivroService {
 
     private final LivroRepository livroRepository;
-    public LivroService(LivroRepository livroRepository) {
+    private final LinguaRepository linguaRepository;
+
+    public LivroService(LivroRepository livroRepository, LinguaRepository linguaRepository) {
         this.livroRepository = livroRepository;
+        this.linguaRepository = linguaRepository;
     }
 
     public List<Livro> listarLivros() {
         List<Livro> livros = this.livroRepository.findAll();
-        if (livros.isEmpty()) {
-            throw new ResourceNotFoundException("Nao ha livros cadastrados");
-        }
+//        if (livros.isEmpty()) {
+//            throw new ResourceNotFoundException("Nao ha livros cadastrados");
+//        }
         return livros;
     }
 
     public Livro incluirLivro(Livro livro) {
         if (LivroValidation.validarLivro(livro)) {
+            Optional<Lingua> optionalLingua = linguaRepository.findById(livro.getLingua().getCodigo());
+            if (optionalLingua.isEmpty()) {
+                throw new RuntimeException("Dados do livro invalidos - Lingua informada nao encontrada");
+            }
+            Lingua lingua = optionalLingua.get();
+            livro.setLingua(lingua);
             return this.livroRepository.save(livro);
         } else {
             throw new RuntimeException("Dados do livro invalidos");
@@ -57,9 +68,15 @@ public class LivroService {
     public Livro atualizarLivro(Long codigo, Livro livroAtualizado) {
         Optional<Livro> livro = this.livroRepository.findById(codigo);
         if (livro.isPresent()) {
+                Optional<Lingua> optionalLingua = linguaRepository.findById(livroAtualizado.getLingua().getCodigo());
+                if (optionalLingua.isEmpty()) {
+                    throw new RuntimeException("Dados do livro invalidos - Lingua informada nao encontrada");
+                }
+                Lingua lingua = optionalLingua.get();
             Livro livroAjustado = livro.get();
             livroAjustado.setTitulo(livroAtualizado.getTitulo());
             livroAjustado.setPreco(livroAtualizado.getPreco());
+                livroAjustado.setLingua(lingua);
             return this.livroRepository.save(livroAjustado);
         } else {
             throw new ResourceNotFoundException("Livro com o codigo [" + codigo + "nao encontrado");

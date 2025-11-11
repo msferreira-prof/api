@@ -1,55 +1,55 @@
 package br.senac.rj.api.controller;
 
 import br.senac.rj.api.exceptions.ResourceNotFoundException;
-import br.senac.rj.api.model.Assunto;
-import br.senac.rj.api.service.AssuntoService;
+import br.senac.rj.api.model.Lingua;
+import br.senac.rj.api.service.LinguaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1")
-public class AssuntoController {
+public class LinguaController {
 
-    private final AssuntoService assuntoService;
+    private final LinguaService linguaService;
 
-    public AssuntoController(AssuntoService assuntoService) {
-        this.assuntoService = assuntoService;
+    public LinguaController(LinguaService linguaService) {
+        this.linguaService = linguaService;
     }
 
-    @GetMapping("/assuntos")
-    public ResponseEntity<?> listarAssuntos() {
+    @GetMapping("/linguas")
+    public ResponseEntity<?> listarLinguas() {
         try {
-            return ResponseEntity.ok(this.assuntoService.listarAssuntos());
+            return ResponseEntity.ok(this.linguaService.listarLinguas());
         } catch (ResourceNotFoundException rnfe) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(rnfe.getMessage());
         }
     }
 
-    @PostMapping("/assuntos")
-    public ResponseEntity<?> incluirAssunto(@RequestBody Assunto assunto) {
+    @PostMapping("/linguas")
+    public ResponseEntity<?> incluirLingua(@RequestBody Lingua lingua) {
         try {
-            Assunto assuntoNovo = this.assuntoService.incluirAssunto(assunto);
-            return ResponseEntity.status(HttpStatus.OK).body(assuntoNovo);
+            Lingua linguaNovo = this.linguaService.incluirLingua(lingua);
+            return ResponseEntity.status(HttpStatus.OK).body(linguaNovo);
         } catch (RuntimeException re) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(re.getMessage());
         }
     }
 
-    @PutMapping("/assuntos/{codigo}")
-    public ResponseEntity<?> atualizarAssunto(@PathVariable Long codigo, @RequestBody Assunto assunto) {
+    @PutMapping("/linguas/{codigo}")
+    public ResponseEntity<?> atualizarLingua(@PathVariable Long codigo, @RequestBody Lingua lingua) {
         try {
-            Assunto assuntoAtualizado = this.assuntoService.atualizarAssunto(codigo, assunto);
-            return ResponseEntity.status(HttpStatus.OK).body(assuntoAtualizado);
+            Lingua linguaAtualizado = this.linguaService.atualizarLingua(codigo, lingua);
+            return ResponseEntity.status(HttpStatus.OK).body(linguaAtualizado);
         } catch (ResourceNotFoundException rnfe) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(rnfe.getMessage());
         }
     }
 
-    @DeleteMapping("/assuntos/{codigo}")
-    public ResponseEntity<?> excluirAssunto(@PathVariable Long codigo) {
+    @DeleteMapping("/linguas/{codigo}")
+    public ResponseEntity<?> excluirLingua(@PathVariable Long codigo) {
         try {
-            this.assuntoService.excluirAssunto(codigo);
+            this.linguaService.excluirLingua(codigo);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (ResourceNotFoundException rnfe) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(rnfe.getMessage());
@@ -58,11 +58,11 @@ public class AssuntoController {
         }
     }
 
-    @GetMapping("/assuntos/{codigo}")
-    public ResponseEntity<?> buscarAssuntoPorCodigo(@PathVariable Long codigo) {
+    @GetMapping("/linguas/{codigo}")
+    public ResponseEntity<?> buscarLinguaPorCodigo(@PathVariable Long codigo) {
         try {
-            Assunto assunto = this.assuntoService.buscarAssuntoPorCodigo(codigo);
-            return ResponseEntity.ok(assunto);
+            Lingua lingua = this.linguaService.buscarLinguaPorCodigo(codigo);
+            return ResponseEntity.ok(lingua);
         } catch (ResourceNotFoundException rnfe) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(rnfe.getMessage());
         } catch (Exception e) {
