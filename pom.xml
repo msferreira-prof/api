@@ -76,14 +76,16 @@
 	</dependencies>
 
 	<build>
-        <resources>
-            <resource>
-                <directory>src/main</directory>
-                <excludes>
-                    <exclude>**/*._*</exclude>
-                </excludes>
-            </resource>
-        </resources>
+		<resources>
+			<resource>
+				<!-- Use the standard resources directory so templates and static files are placed
+					 directly under classpath:/templates and classpath:/static -->
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>**/*._*</exclude>
+				</excludes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

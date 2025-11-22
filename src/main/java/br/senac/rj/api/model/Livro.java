@@ -1,9 +1,10 @@
 package br.senac.rj.api.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "codigo")
 @Entity
 @Table(name="livros")
 public class Livro {
@@ -17,7 +18,6 @@ public class Livro {
     private Double preco;
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="lingua_codigo")
-    @JsonManagedReference
     private Lingua lingua;
 
     public Livro() {
